@@ -27,6 +27,8 @@ services:
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment: 
+      - VIRTUAL_PROTO=uwsgi
     depends_on:
       - web
   nginx-proxy-letsencrypt:
