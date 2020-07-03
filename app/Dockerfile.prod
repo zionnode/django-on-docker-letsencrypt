@@ -14,13 +14,13 @@ ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
 RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+    && apk add postgresql-dev gcc python3-dev musl-dev linux-headers
 
 # lint
 RUN pip install --upgrade pip
 RUN pip install flake8
 COPY . .
-RUN flake8 --ignore=E501,F401 .
+RUN flake8 --ignore=E501,F401,W291,W292 .
 
 # install dependencies
 COPY ./requirements.txt .
@@ -55,7 +55,7 @@ COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint-prod.sh
-COPY ./entrypoint.prod.sh $APP_HOME
+COPY ./entrypoint.sh $APP_HOME
 
 # copy project
 COPY . $APP_HOME
@@ -67,4 +67,4 @@ RUN chown -R app:app $APP_HOME
 USER app
 
 # run entrypoint.prod.sh
-ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
+ENTRYPOINT ["/home/app/web/entrypoint.sh"]
